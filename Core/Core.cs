@@ -54,10 +54,10 @@ namespace Dev
         private int currentTab = 0;
         public bool ShowMenu = true;
         private int antiCheatSelectedTab = 0;
-        private bool HandCam;
+        private bool handCamEnabled;
         public static bool ShowCameraObj;
         private bool EnableSmoothing = true;
-        private bool WASD = false;
+        private bool wasdEnabled = false;
         private string roomtojoin = "";
         private string nametochange = "";
         private bool hideRoomCode = false;
@@ -66,6 +66,9 @@ namespace Dev
         private bool showSpeedTags = false; // OFF by default
         private bool showPingTags = false; // OFF by default
         private bool fpsCapEnabled = false; // FPS cap toggle
+        private float nearClip = 0.01f;
+        private bool fpsUnlocked = false;
+        private float fpsCap = 144f;
         public static bool freecam = false;
         private bool awaitingKey = false;
         private string currentKeyTarget = "";
@@ -77,9 +80,6 @@ namespace Dev
         private bool isDragging = false;
         private bool cursorEnabled = false;
         private bool micToggleEnabled = false;
-        private bool fpsUnlocked = false;
-        private float fpsCap = 144f;
-        private float nearClip = 0.03f;
         private Texture2D LavaDistanceTab;
         private bool lavaDistanceEnabled = true;
         private float lavaWarningThreshold = 10f;
@@ -224,7 +224,6 @@ namespace Dev
             LeaderBoardTab = LoadTexture("LeaderBoard.png");
             MiniMapTab = LoadTexture("MiniMap.png");
             ConfigTab = LoadTexture("ConfigTab.png");
-            LavaDistanceTab = LoadTexture("LavaDistance.png");
             fpsUnlocked = FpsUnLock.FpsUnlocked;
             CameraUpdater.nearClip = saved.nearClip;
 
@@ -284,16 +283,21 @@ namespace Dev
                 Debug.Log("[UnknownCasting] Toast Notifications initialized");
             }
 
-            // Initialize FPS Counter
-            GameObject fpsObj = new GameObject("FPSCounterManager");
-            fpsObj.AddComponent<UnknownCasting.Core.FPSCounter>();
-            DontDestroyOnLoad(fpsObj);
-            
-            // Wait a frame for Awake to run, then initialize
-            StartCoroutine(InitializeFPSCounter());
+        // Initialize FPS Counter
+               GameObject fpsObj = new GameObject("FPSCounterManager");
+               fpsObj.AddComponent<UnknownCasting.Core.FPSCounter>();
+               DontDestroyOnLoad(fpsObj);
+               
+                // Wait a frame for Awake to run, then initialize
+                StartCoroutine(InitializeFPSCounter());
+           }
+
+        private void CheckScreenRecorder()
+        {
+            // Removed recording functionality
         }
-        
-        private System.Collections.IEnumerator InitializeFPSCounter()
+           
+           private System.Collections.IEnumerator InitializeFPSCounter()
         {
             yield return null; // Wait one frame
 
@@ -417,9 +421,11 @@ namespace Dev
             Debug.Log($"[UnknownCasting] Fonts: {string.Join(", ", availableFonts)}");
         }
 
-        private void Update()
-        {
-            // Helper function to check if a specific key was pressed
+private void Update()
+         {
+             // CheckScreenRecorder(); // Removed
+             
+             // Helper function to check if a specific key was pressed
             bool CheckKeyPressed(Key key)
             {
                 switch (key)
@@ -570,7 +576,7 @@ namespace Dev
              AntiAFK.AntiAFKKick();
 
             // WASD runs after CameraUpdater so it uses the spectating camera
-            if (WASD && !AutoSpec.AutoPilotEnabled && !Dev.Plugin.freecam)
+             if (wasdEnabled && !AutoSpec.AutoPilotEnabled && !Dev.Plugin.freecam)
                 UnknownCasting.Core.WASD.Wasd();
             
             // Fly mode (key-based fly from head position)
@@ -1483,10 +1489,10 @@ namespace Dev
                     speedTagOffset = NameTags.speedTagOffset,
 
                     // Camera settings
-                    HandCam = HandCam,
+                    handCamEnabled = handCamEnabled,
                     ShowCameraObj = ShowCameraObj,
                     EnableSmoothing = EnableSmoothing,
-                    WASD = WASD,
+                    wasdEnabled = wasdEnabled,
                      camX = CameraUpdater.x,
                      camY = CameraUpdater.y,
                      camZ = CameraUpdater.z,
@@ -1524,11 +1530,11 @@ namespace Dev
                 string json = JsonUtility.ToJson(preset, true);
                 File.WriteAllText(presetPath, json);
 
-                Logger.LogInfo($"Preset '{presetName}' saved successfully!");
+                UnityEngine.Debug.Log($"Preset '{presetName}' saved successfully!");
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error saving preset: {ex.Message}");
+                UnityEngine.Debug.LogError($"Error saving preset: {ex.Message}");
             }
         }
 
@@ -1585,10 +1591,10 @@ namespace Dev
                     NameTags.speedTagOffset = preset.speedTagOffset;
 
                     // Camera settings
-                    HandCam = preset.HandCam;
+                    handCamEnabled = preset.handCamEnabled;
                     ShowCameraObj = preset.ShowCameraObj;
                     EnableSmoothing = preset.EnableSmoothing;
-                    WASD = preset.WASD;
+                    wasdEnabled = preset.wasdEnabled;
                     CameraUpdater.x = preset.camX;
                     CameraUpdater.y = preset.camY;
                     CameraUpdater.z = preset.camZ;
@@ -1641,16 +1647,16 @@ namespace Dev
                     MiniMap.MiniMapOpacity = miniMapOpacity;
                     MiniMap.MiniMapPosition = new Vector2(miniMapX, miniMapY);
 
-                    Logger.LogInfo($"Preset '{presetName}' loaded successfully!");
+                    UnityEngine.Debug.Log($"Preset '{presetName}' loaded successfully!");
                 }
                 else
                 {
-                    Logger.LogError($"Preset file not found: {presetPath}");
+                    UnityEngine.Debug.LogError($"Preset file not found: {presetPath}");
                 }
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error loading preset: {ex.Message}");
+                UnityEngine.Debug.LogError($"Error loading preset: {ex.Message}");
             }
         }
 
@@ -1663,12 +1669,12 @@ namespace Dev
                 if (File.Exists(presetPath))
                 {
                     File.Delete(presetPath);
-                    Logger.LogInfo($"Preset '{presetName}' deleted successfully!");
+                    UnityEngine.Debug.Log($"Preset '{presetName}' deleted successfully!");
                 }
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error deleting preset: {ex.Message}");
+                UnityEngine.Debug.LogError($"Error deleting preset: {ex.Message}");
             }
         }
 
@@ -1707,10 +1713,10 @@ namespace Dev
             public float speedTagOffset = 0.4f;
 
             // Camera settings
-            public bool HandCam;
+            public bool handCamEnabled;
             public bool ShowCameraObj;
             public bool EnableSmoothing = true;
-            public bool WASD = false;
+            public bool wasdEnabled = false;
             public float camX = 0f;
             public float camY = 0.6f;
             public float camZ = 2f;
@@ -2139,12 +2145,12 @@ namespace Dev
             WASDButton.width *= scale;
             WASDButton.height *= scale;
             WASDButton.x = (tabWidth - WASDButton.width) / 2f;
-            if (GUI.Button(WASDButton, WASD ? "WASD <color=green>[ON]</color>" : "WASD <color=red>[OFF]</color>", label))
-                WASD = !WASD;
+            if (GUI.Button(WASDButton, wasdEnabled ? "WASD <color=green>[ON]</color>" : "WASD <color=red>[OFF]</color>", label))
+                wasdEnabled = !wasdEnabled;
             currentY += controlHeight * scale + spacing;
             
             // ===== WASD SPEED SLIDER =====
-            if (WASD)
+            if (wasdEnabled)
             {
                 GUI.Label(new Rect(controlX, currentY, controlWidth, 20f), "WASD Speed: " + UnknownCasting.Core.WASD.maxSpeed.ToString("F1"), label);
                 currentY += 20f;
@@ -2282,6 +2288,9 @@ namespace Dev
                 GUI.Label(new Rect(controlX, currentY, controlWidth, 40f), "Controls: W/S/A/D = Move, Space = Up, Ctrl = Down, E/Q = Rotate (Hold RMB)", label);
                 currentY += 25f;
             }
+            
+            // SCREEN RECORDER REMOVED
+            currentY += spacing;
         }
 
         private void DrawPhotonNetworkTab()
@@ -3204,10 +3213,10 @@ namespace Dev
             saved.speedTagOffset = NameTags.speedTagOffset;
 
             // Existing settings...
-            saved.HandCam = HandCam;
+            saved.handCamEnabled = handCamEnabled;
             saved.ShowCameraObj = ShowCameraObj;
             saved.EnableSmoothing = EnableSmoothing;
-            saved.WASD = WASD;
+            saved.wasdEnabled = wasdEnabled;
             saved.fly = UnknownCasting.Core.WASD.fly;
             saved.camX = CameraUpdater.x;
             saved.camY = CameraUpdater.y;
@@ -3222,9 +3231,9 @@ namespace Dev
               saved.selfRigLerpAmount = CameraUpdater.selfRigLerpAmount;
              saved.leaderboardStyle = (int)LeaderBoard.CurrentStyle;
             saved.hideRoomCode = hideRoomCode;
-            saved.cursorEnabled = cursorEnabled;
-            saved.micToggleEnabled = micToggleEnabled;
-            saved.fpsUnlocked = fpsUnlocked;
+saved.cursorEnabled = cursorEnabled;
+             saved.micToggleEnabled = micToggleEnabled;
+             saved.fpsUnlocked = fpsUnlocked;
             saved.fpsCap = fpsCap;
             saved.nearClip = nearClip;
             
@@ -3305,15 +3314,16 @@ namespace Dev
                 NameTags.speedTagOffset = saved.speedTagOffset;
 
                 // Existing settings...
-                HandCam = saved.HandCam;
+                handCamEnabled = saved.handCamEnabled;
                 ShowCameraObj = saved.ShowCameraObj;
                 EnableSmoothing = saved.EnableSmoothing;
-                WASD = saved.WASD;
+                wasdEnabled = saved.wasdEnabled;
                 UnknownCasting.Core.WASD.fly = saved.fly;
                 hideRoomCode = saved.hideRoomCode;
-                cursorEnabled = saved.cursorEnabled;
-                micToggleEnabled = saved.micToggleEnabled;
-                fpsUnlocked = saved.fpsUnlocked;
+cursorEnabled = saved.cursorEnabled;
+                 micToggleEnabled = saved.micToggleEnabled;
+                 // Recording settings removed
+                  fpsUnlocked = saved.fpsUnlocked;
                 fpsCap = saved.fpsCap;
                 FpsUnLock.SetFPSUnlock(fpsUnlocked);
                 nearClip = saved.nearClip;
@@ -3500,10 +3510,10 @@ namespace Dev
             public float speedTagOffset = 0.4f;
 
             // Existing settings...
-            public bool HandCam;
+            public bool handCamEnabled;
             public bool ShowCameraObj;
             public bool EnableSmoothing = true;
-            public bool WASD = false;
+            public bool wasdEnabled = false;
             public bool fly = false;
             public float camX = 0f;
             public float camY = 0.6f;
@@ -3548,8 +3558,10 @@ namespace Dev
             public float miniMapY = 387f;
             public bool fpsUnlocked = false;
             public float fpsCap = 144f;
-            
-            // Environment settings
+             
+             // Screen Recorder settings removed
+             
+             // Environment settings
             public int timeOfDayIndex = 0;
             public int weatherIndex = 0;
         }

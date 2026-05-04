@@ -406,10 +406,12 @@ namespace UnknownCasting.Core
 
             if (!enableSelfRigSmoothing)
             {
-                localSmoothingReady = false; // reset init flag
+                vrrig.enabled = true;
+                localSmoothingReady = false;
                 return;
             }
 
+            vrrig.enabled = false;
             if (!localSmoothingReady)
             {
                 SetupSmoothRig();
@@ -446,6 +448,14 @@ namespace UnknownCasting.Core
                     smoothRightHandRot = right.rotation;
                 }
             }
+
+            vrrig.transform.position = smoothHeadPos - new Vector3(0f, 0.15f, 0f);
+            vrrig.transform.rotation = smoothBodyRot;
+            vrrig.head.rigTarget.rotation = smoothHeadRot;
+            vrrig.leftHand.rigTarget.position = smoothLeftHandPos;
+            vrrig.leftHand.rigTarget.rotation = smoothLeftHandRot * handOffset;
+            vrrig.rightHand.rigTarget.position = smoothRightHandPos;
+            vrrig.rightHand.rigTarget.rotation = smoothRightHandRot * handOffset;
         }
 
         private static void SetupSmoothRig()
