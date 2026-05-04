@@ -5,11 +5,14 @@
 	  <RootNamespace>UnknownCasting</RootNamespace>
 	  <AssemblyName>UnknownCasting</AssemblyName>
 	  <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+	  <GameAssemblyPath>D:\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed</GameAssemblyPath>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Injector\**" />
+    <Compile Remove="Inter\**" />
     <None Remove="Injector\**" />
+    <None Remove="Inter\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,7 +37,7 @@
 
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>$(BepInExAssemblyPath)\0Harmony.dll</HintPath>
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(GameAssemblyPath)\Assembly-CSharp.dll</HintPath>
@@ -46,10 +49,13 @@
       <HintPath>$(GameAssemblyPath)\BakeryRuntimeAssembly.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>$(BepInExAssemblyPath)\BepInEx.dll</HintPath>
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Harmony">
-      <HintPath>$(BepInExAssemblyPath)\BepInEx.Harmony.dll</HintPath>
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\BepInEx.Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.Preloader">
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\BepInEx.Preloader.dll</HintPath>
     </Reference>
     <Reference Include="Fusion.Common">
       <HintPath>D:\steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\Fusion.Common.dll</HintPath>
@@ -69,8 +75,29 @@
     <Reference Include="Fusion.Unity">
       <HintPath>D:\steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\Fusion.Unity.dll</HintPath>
     </Reference>
+    <Reference Include="HarmonyXInterop">
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\HarmonyXInterop.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Security">
       <HintPath>$(GameAssemblyPath)\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="Oculus.Platform">
       <HintPath>$(GameAssemblyPath)\Oculus.Platform.dll</HintPath>
@@ -481,13 +508,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="ScoreBoard#1.png" />
-    <None Remove="Inter\InterVariable.ttf" />
     <None Remove="PaytoneOne.ttf" />
     <EmbeddedResource Include="PaytoneOne.ttf">
       <LogicalName>PaytoneOne.ttf</LogicalName>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Inter\InterVariable.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Remove="CameraOptions.png" />

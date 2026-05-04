@@ -2,6 +2,9 @@
 
   <PropertyGroup>
 	  <TargetFramework>netstandard2.1</TargetFramework>
+	  <GameAssemblyPath>D:\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed</GameAssemblyPath>
+	  <BepInExAssemblyPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\core</BepInExAssemblyPath>
+	  <PluginsPath>D:\Steam\steamapps\common\Gorilla Tag\BepInEx\plugins</PluginsPath>
   </PropertyGroup>
 
   <ItemGroup>
